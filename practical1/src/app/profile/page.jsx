@@ -3,6 +3,7 @@ import { FaEdit, FaUserPlus } from 'react-icons/fa';
 export default function ProfilePage() {
   return (
     <div className="max-w-4xl mx-auto py-8">
+
       {/* Profile header */}
       <div className="flex items-start mb-8">
         <div className="h-24 w-24 rounded-full bg-gray-300 mr-6"></div>
@@ -42,6 +43,7 @@ export default function ProfilePage() {
       {/* Videos grid */}
       <div className="py-4">
         <div className="grid grid-cols-6 gap-1">
+
           {/* Empty state for now */}
           <div className="col-span-6 py-20 text-center">
             <div className="max-w-md mx-auto">
@@ -52,8 +54,10 @@ export default function ProfilePage() {
               </button>
             </div>
           </div>
+
         </div>
       </div>
+
     </div>
   );
 }
