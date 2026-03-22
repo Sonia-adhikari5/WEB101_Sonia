@@ -1,133 +1,104 @@
-# Reflection on Weather API Dashboard – WEB101
+# Reflection on Practical 2 – WEB101
 
-This document contains my reflections on the concepts covered in this practical. It includes what I learned, the challenges I faced, and how I overcame them.
-
----
-
-### 1. HTML Structure
-
-### What I Learned
-
-I learned how to create a well-structured HTML document using standard elements such as html, head, and body.
-
-I also understood the importance of organizing content properly so that it can be easily styled and manipulated using CSS and JavaScript.
-
-### Challenges Faced
-
-Initially, I found it difficult to decide how to structure the page for better readability and functionality.
-
-I sometimes placed elements incorrectly, which affected the layout.
-
-### How I Overcame Them
-
-I reviewed examples and practiced creating simple layouts before building the final structure.
-
-This helped me understand how to organize elements more effectively.
+This document presents my reflection on the Weather API practical. It explains what I learned, the challenges I encountered, and how I resolved them.
 
 ---
 
-### 2. CSS Styling
+### 1. Understanding RESTful APIs
 
-### What I Learned
+#### What I Learned
 
-I learned how to use CSS to improve the appearance of a webpage.
+I learned how RESTful APIs work and how different HTTP methods such as GET, POST, PUT, and DELETE are used in real-world applications. I also understood how APIs allow communication between frontend applications and external services.
 
-I understood how properties such as margin, padding, border, and background color affect layout and design.
+#### Challenges Faced
 
-I also learned how to create visually appealing components like cards and buttons.
+Initially, I found it difficult to understand the difference between each HTTP method and when to use them. The concept of sending and receiving JSON data was also confusing.
 
-### Challenges Faced
+#### How I Overcame Them
 
-At first, I struggled with understanding how different CSS properties interact with each other.
-
-Sometimes the layout looked messy or misaligned.
-
-### How I Overcame Them
-
-I experimented with different CSS values and observed the results.
-
-With practice, I became more confident in controlling the layout and design.
+I reviewed examples and practiced using fetch() multiple times. By testing each request separately, I was able to clearly understand how each method works.
 
 ---
 
-### 3. JavaScript Functionality
+### 2. Working with the OpenWeatherMap API
 
-### What I Learned
+#### What I Learned
 
-I learned how to use JavaScript to add interactivity to a webpage.
+I learned how to fetch real-time weather data using an external API. I also understood how API keys are used for authentication and how to structure API requests.
 
-I understood how to capture user input, manipulate the DOM, and dynamically update content.
+#### Challenges Faced
 
-I also learned how JavaScript can be used to simulate real-world applications such as a weather dashboard.
+I faced issues with incorrect API responses due to missing or invalid API keys. Sometimes the data was not displayed correctly.
 
-### Challenges Faced
+#### How I Overcame Them
 
-I found it difficult to understand how JavaScript interacts with HTML elements.
-
-I also struggled with updating content dynamically without refreshing the page.
-
-### How I Overcame Them
-
-I practiced using basic JavaScript functions and tested small pieces of code.
-
-This helped me understand how DOM manipulation works.
+I carefully checked the API key and ensured it was correctly added in the code. I also used console.log() to debug and understand the API response structure.
 
 ---
 
-### 4. Layout and Design
+### 3. Implementing CRUD Operations
 
-### What I Learned
+#### What I Learned
 
-I learned how to design a clean and structured layout using containers and sections.
+I learned how to perform Create, Read, Update, and Delete operations using JavaScript. This helped me understand how web applications manage data.
 
-I also understood how Flexbox can be used to create responsive layouts.
+#### Challenges Faced
 
-### Challenges Faced
+The PUT and DELETE operations were confusing, especially updating the UI after making changes. I also struggled with tracking which item needed to be edited.
 
-I was confused about aligning elements properly and maintaining consistent spacing.
+#### How I Overcame Them
 
-### How I Overcame Them
-
-I used Flexbox properties such as display, gap, and justify-content to improve alignment.
-
-This helped create a more organized layout.
+I implemented an ID system and used variables to track the selected item. I also improved my understanding of DOM manipulation to update elements dynamically.
 
 ---
 
-### 5. User Interface Design
+### 4. User Interface Design
 
-### What I Learned
+#### What I Learned
 
-I learned how to design a simple and user-friendly interface.
+I learned how to design a simple and functional user interface using HTML and CSS. I also understood how tab navigation improves user experience.
 
-I understood how colors, spacing, and layout contribute to readability and usability.
+#### Challenges Faced
 
-### Challenges Faced
+I found it difficult to manage multiple sections on one page. Ensuring only one tab is active at a time was also challenging.
 
-Initially, my design looked cluttered and unorganized.
+#### How I Overcame Them
 
-### How I Overcame Them
+I used JavaScript to control visibility of sections. By adding and removing classes, I was able to manage tab switching effectively.
 
-I simplified the design and used consistent spacing and styling.
+---
 
-This improved the overall appearance of the application.
+### 5. Debugging and Problem Solving
+
+#### What I Learned
+
+I learned how to debug JavaScript code using browser developer tools. I understood the importance of checking errors and testing code step-by-step.
+
+#### Challenges Faced
+
+There were multiple errors related to API calls, incorrect data handling, and UI updates. It was sometimes difficult to identify the exact problem.
+
+#### How I Overcame Them
+
+I used console logs and error messages to trace issues. Breaking down the code into smaller parts helped me identify and fix problems more efficiently.
 
 ---
 
 ### Overall Reflection
 
-This practical helped me understand how HTML, CSS, and JavaScript work together to create a complete web application.
+This practical helped me gain a strong understanding of how web applications interact with APIs. I learned how to implement different HTTP methods and update the UI dynamically.
 
-I gained experience in structuring webpages, styling them, and adding interactivity.
-
-Although I faced challenges in layout design and JavaScript functionality, I was able to overcome them through practice and experimentation.
+Although I faced several challenges, especially with API integration and debugging, I was able to overcome them through practice and persistence.
 
 ---
 
 ### Future Improvements
 
-I want to improve my JavaScript skills, especially in working with APIs.
+In the future, I would like to:
 
-I also plan to explore more advanced CSS techniques for better design.
+- Improve UI design using advanced CSS frameworks
+- Add better error handling for API requests
+- Store data using a real database instead of a mock API
+- Enhance user experience with animations and feedback messages
 
-In the future, I aim to build fully functional and interactive web applications using modern technologies.
+This practical has helped build a solid foundation for developing more advanced web applications.
