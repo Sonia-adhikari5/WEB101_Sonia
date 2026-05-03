@@ -1,74 +1,71 @@
 'use client';
-import {useState } from 'react';
-import {
-    FaHeart, FaRegHeart, FaComment, 
-    FaShare, FaMusic
-} from 'react-icons/fa';
 
-export default function VideoCard ({post}) {
-    const [liked, setLiked] = useState(false);
+import { useState } from 'react';
+import Link from 'next/link';
+import { useAuth } from '@/contexts/authContext';
+import { toggleLike } from '@/services/videoService';
+import toast from 'react-hot-toast';
 
-    //Placeholder data
-    const { username, caption, audio, likes, comments, shares } = post;
-    const handleLikeClick = () => {
-        setLiked(!liked);
-    };
+export default function VideoCard({ video }) {
+  const { user } = useAuth();
+  const [liked, setLiked] = useState(video.isLiked || false);
+  const [likeCount, setLikeCount] = useState(video._count?.likes || 0);
 
-    return (
-        <div className="flex py-6 border-b">
-            {/* User avatar */}
-            <div className="mr-3">
-                <div className="h-12 w-12 rounded-full bg-gray-300"></div>
-            </div>
+  const handleLike = async () => {
+    if (!user) {
+      toast.error('Please login to like videos');
+      return;
+    }
+    try {
+      await toggleLike(video.id);
+      setLiked(!liked);
+      setLikeCount(liked ? likeCount - 1 : likeCount + 1);
+    } catch (err) {
+      toast.error('Failed to like video');
+    }
+  };
 
-            <div className="flex-1">
-                {/* User info and caption */}
-                <div className="mb-2">
-                    <span className="text-sm ml-1"> 2d ago </span>
-                    <p className="text-sm mt-1"> {caption} </p>
-                </div>
+  return (
+    <div className="bg-white rounded-lg shadow p-4 mb-4">
+      {/* User info */}
+      <div className="flex items-center gap-3 mb-3">
+        <Link href={`/profile/${video.user?.id}`}>
+          <div className="w-10 h-10 rounded-full bg-gray-300 flex items-center justify-center font-bold text-white bg-red-400">
+            {video.user?.username?.[0]?.toUpperCase() || '?'}
+          </div>
+        </Link>
+        <Link href={`/profile/${video.user?.id}`} className="font-semibold hover:text-red-500">
+          {video.user?.username || 'Unknown'}
+        </Link>
+      </div>
 
-                {/* Audio info */}
-                <div className="flex items-center text-sm mb-3">
-                    <FaMusic className="mr-2 text-xs" />
-                    <span className="truncate max-w-[250px]">{audio}</span>
-                </div>
+      {/* Caption */}
+      <p className="mb-3 text-gray-700">{video.caption}</p>
 
-                <div className="flex">
-                    {/* Video conatiner */}
-                    <div className="mr-5 w-[300px] h-[530px] bg-black rounded-md flex items-center justify-center relative overflow-hidden">
-                        <p className="text-white"> Video Placeholder</p>
-                        <div className="absolute bottom-4 left-4 text-white text-sm">
-                            <p className="mb-1"> 0:30 </p>
-                        </div>
-                    </div>
-                    {/* Interaction buttons */}
-                    <div className="flex flex-col justify-end space-y-3 py-2">
-                        {/* Like button */}
-                        <button
-                        className="flex flex-col items-center"
-                        onClick = {handleLikeClick}
-                        >
-                            <div className="h-10 w-10 rounded-full bg-gray-200 flex items-center justidy-center">
-                                {liked ? (
-                                    <FaHeart className="text-red-500" />
-                                ) : (
-                                    <FaRegHeart />
-                                )}
-                            </div>
-                            <span className="text-xs mt-1"> {liked ? likes + 1 : likes}</span>
-                        </button>
+      {/* Video player */}
+      <video
+        src={video.url}
+        controls
+        className="w-full rounded-lg max-h-96 bg-black"
+        loop
+      />
 
-                        {/* Comment button */}
-                        <button className="flex flex-col items-center">
-                            <div className="h-10 w-10 rounded-full bg-gray-200 flex items-center justify-center">
-                                <FaShare />
-                            </div>
-                            <span className="text-xs mt-1"> {shares}</span>
-                        </button>
-                    </div>   
-                </div>
-            </div>
-        </div>
-    );
+      {/* Interaction buttons */}
+      <div className="flex items-center gap-6 mt-3">
+        <button
+          onClick={handleLike}
+          className={`flex items-center gap-1 font-medium ${liked ? 'text-red-500' : 'text-gray-500'} hover:text-red-500`}
+        >
+          {liked ? '❤️' : '🤍'} {likeCount}
+        </button>
+
+        <Link
+          href={`/video/${video.id}`}
+          className="flex items-center gap-1 text-gray-500 hover:text-red-500 font-medium"
+        >
+          💬 {video._count?.comments || 0}
+        </Link>
+      </div>
+    </div>
+  );
 }

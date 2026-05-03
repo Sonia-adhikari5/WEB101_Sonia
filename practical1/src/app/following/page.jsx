@@ -1,26 +1,69 @@
+'use client';
+
+import { useEffect, useState } from 'react';
+import VideoCard from '@/components/ui/VideoCard';
+import { getFollowingVideos } from '@/services/videoService';
+import { useAuth } from '@/contexts/authContext';
+import Link from 'next/link';
+
 export default function FollowingPage() {
+  const { user } = useAuth();
+  const [videos, setVideos] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+    const fetchVideos = async () => {
+      try {
+        const data = await getFollowingVideos();
+        setVideos(data);
+      } catch (err) {
+        setError('Failed to load videos.');
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    if (user) fetchVideos();
+    else setLoading(false);
+  }, [user]);
+
+  if (!user) return (
+    <div className="flex flex-col items-center justify-center h-64 gap-4">
+      <p className="text-gray-500 text-lg">Login to see videos from people you follow</p>
+      <Link href="/" className="bg-red-500 text-white px-6 py-2 rounded font-semibold hover:bg-red-600">
+        Go Home
+      </Link>
+    </div>
+  );
+
+  if (loading) return (
+    <div className="flex justify-center items-center h-64">
+      <p className="text-gray-500 animate-pulse">Loading...</p>
+    </div>
+  );
+
+  if (error) return (
+    <div className="flex justify-center items-center h-64">
+      <p className="text-red-500">{error}</p>
+    </div>
+  );
+
+  if (videos.length === 0) return (
+    <div className="flex flex-col items-center justify-center h-64 gap-4">
+      <p className="text-gray-500 text-lg">No videos yet from people you follow</p>
+      <Link href="/explore-users" className="bg-red-500 text-white px-6 py-2 rounded font-semibold hover:bg-red-600">
+        Explore Users
+      </Link>
+    </div>
+  );
+
   return (
-    <div className="max-w-[550px] mx-auto py-10 text-center">
-      <h2 className="text-2xl font-bold mb-3">Follow accounts</h2>
-      <p className="text-gray-500 mb-8">
-        Follow accounts to see their latest videos
-      </p>
-
-      <div className="grid grid-cols-5 gap-4 mb-6">
-        {Array.from({ length: 5 }).map((_, index) => (
-          <div key={index} className="text-center">
-            <div className="h-16 w-16 rounded-full bg-gray-300 mx-auto mb-2"></div>
-            <p className="text-sm font-semibold">user_{index + 1}</p>
-            <button className="mt-2 text-xs bg-red-500 text-white py-1 px-4 rounded-full">
-              Follow
-            </button>
-          </div>
-        ))}
-      </div>
-
-      <button className="border border-gray-300 text-gray-700 py-2 px-8 rounded-md font-medium">
-        See more
-      </button>
+    <div className="max-w-xl mx-auto">
+      <h1 className="text-2xl font-bold mb-6">Following</h1>
+      {videos.map((video) => (
+        <VideoCard key={video.id} video={video} />
+      ))}
     </div>
   );
 }

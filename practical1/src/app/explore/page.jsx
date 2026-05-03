@@ -1,36 +1,92 @@
-export default function ExplorePage() {
-    return (
-      <div className="p-4">
-        <h2 className="text-2xl font-bold mb-4">Explore</h2>
-  
-        <div className="mb-8">
-          <h3 className="text-xl font-semibold mb-3">Trending Hashtags</h3>
-          <div className="grid grid-cols-3 gap-4">
-            {Array.from({ length: 6 }).map((_, index) => (
-              <div
-                key={index}
-                className="aspect-video bg-gray-200 rounded-md flex flex-col items-center justify-center p-4"
-              >
-                <p className="font-bold text-lg">#Trending{index + 1}</p>
-                <p className="text-sm text-gray-500">{(index + 1) * 1.5}M views</p>
-              </div>
-            ))}
-          </div>
-        </div>
-  
-        <div>
-          <h3 className="text-xl font-semibold mb-3">Popular Videos</h3>
-          <div className="grid grid-cols-4 gap-3">
-            {Array.from({ length: 12 }).map((_, index) => (
-              <div
-                key={index}
-                className="aspect-[9/16] bg-gray-300 rounded-md flex items-center justify-center"
-              >
-                <p className="text-sm">Video {index + 1}</p>
-              </div>
-            ))}
-          </div>
-        </div>
+'use client';
+
+import { useEffect, useState } from 'react';
+import { getAllUsers, followUser, unfollowUser } from '@/services/userService';
+import { useAuth } from '@/contexts/authContext';
+import Link from 'next/link';
+import toast from 'react-hot-toast';
+
+export default function ExploreUsersPage() {
+  const { user } = useAuth();
+  const [users, setUsers] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchUsers = async () => {
+      try {
+        const data = await getAllUsers();
+        setUsers(data);
+      } catch (err) {
+        toast.error('Failed to load users');
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchUsers();
+  }, []);
+
+  const handleFollow = async (targetUser) => {
+    if (!user) {
+      toast.error('Please login to follow users');
+      return;
+    }
+    try {
+      if (targetUser.isFollowing) {
+        await unfollowUser(targetUser.id);
+        toast.success(`Unfollowed ${targetUser.username}`);
+      } else {
+        await followUser(targetUser.id);
+        toast.success(`Following ${targetUser.username}`);
+      }
+      // Update local state
+      setUsers(users.map(u =>
+        u.id === targetUser.id
+          ? { ...u, isFollowing: !u.isFollowing }
+          : u
+      ));
+    } catch (err) {
+      toast.error('Action failed. Try again.');
+    }
+  };
+
+  if (loading) return (
+    <div className="flex justify-center items-center h-64">
+      <p className="text-gray-500 animate-pulse">Loading users...</p>
+    </div>
+  );
+
+  return (
+    <div className="max-w-xl mx-auto">
+      <h1 className="text-2xl font-bold mb-6">Explore Users</h1>
+      <div className="flex flex-col gap-4">
+        {users
+          .filter(u => u.id !== user?.id) // Don't show yourself
+          .map((u) => (
+            <div key={u.id} className="bg-white rounded-lg shadow p-4 flex items-center justify-between">
+              <Link href={`/profile/${u.id}`} className="flex items-center gap-3 hover:text-red-500">
+                <div className="w-10 h-10 rounded-full bg-red-400 flex items-center justify-center text-white font-bold">
+                  {u.username?.[0]?.toUpperCase()}
+                </div>
+                <div>
+                  <p className="font-semibold">{u.username}</p>
+                  <p className="text-sm text-gray-500">{u._count?.videos || 0} videos</p>
+                </div>
+              </Link>
+              {user && (
+                <button
+                  onClick={() => handleFollow(u)}
+                  className={`px-4 py-1.5 rounded font-semibold text-sm ${
+                    u.isFollowing
+                      ? 'bg-gray-100 hover:bg-gray-200 text-gray-700'
+                      : 'bg-red-500 hover:bg-red-600 text-white'
+                  }`}
+                >
+                  {u.isFollowing ? 'Unfollow' : 'Follow'}
+                </button>
+              )}
+            </div>
+          ))}
       </div>
-    );
-  }
+    </div>
+  );
+}
