@@ -43,3 +43,40 @@ export const postComment = async (videoId, content) => {
   const response = await api.post(`/videos/${videoId}/comments`, { content });
   return response.data;
 };
+
+import axios from 'axios'
+
+const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api'
+
+// This function signature is important:
+// TanStack Query will pass { pageParam } to it automatically
+export const fetchVideos = async ({ pageParam = null }) => {
+  const params = new URLSearchParams()
+  params.append('limit', '10')
+  
+  // Only add cursor if we have one (first page has no cursor)
+  if (pageParam) {
+    params.append('cursor', pageParam)
+  }
+
+  const response = await axios.get(`${API_URL}/videos?${params}`, {
+    withCredentials: true   // Include if you use cookies for auth
+  })
+
+  return response.data  // { videos, nextCursor, hasNextPage }
+}
+
+export const fetchFollowingVideos = async ({ pageParam = null }) => {
+  const params = new URLSearchParams()
+  params.append('limit', '10')
+  
+  if (pageParam) {
+    params.append('cursor', pageParam)
+  }
+
+  const response = await axios.get(`${API_URL}/videos/following?${params}`, {
+    withCredentials: true
+  })
+
+  return response.data
+}
