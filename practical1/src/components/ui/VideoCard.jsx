@@ -11,6 +11,14 @@ export default function VideoCard({ video }) {
   const [liked, setLiked] = useState(video.isLiked || false);
   const [likeCount, setLikeCount] = useState(video._count?.likes || 0);
 
+  const getFullVideoUrl = (url) => {
+    if (!url) return '';
+    // Supabase URLs are already full URLs
+    if (url.startsWith('http')) return url;
+    // Fallback for old local URLs
+    return `${process.env.NEXT_PUBLIC_API_URL}/${url}`;
+  };
+
   const handleLike = async () => {
     if (!user) {
       toast.error('Please login to like videos');
@@ -44,7 +52,7 @@ export default function VideoCard({ video }) {
 
       {/* Video player */}
       <video
-        src={video.url}
+        src={getFullVideoUrl(video.videoUrl || video.url)}
         controls
         className="w-full rounded-lg max-h-96 bg-black"
         loop
